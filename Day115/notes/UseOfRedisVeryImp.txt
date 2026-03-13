@@ -1,0 +1,14 @@
+dekho jaise maanlo ek user hai and wo instagram chala raha hai toh usmein multiple api hogi like 
+1:/api/post/like/post(ek post ko like karna )
+2:/api/post/commnet(ek post ko commnet karna )
+3:/api/post/save (ek post ko save karna )
+4:/api/post/reels/save (ek reels ko save karna )
+5:/api/post/reels/like (ek reels  ko like karna )
+6:/api/post/reels/comment (ek reels ko comment karna )
+
+MATLAB KI EK USER 1 MINUTE MEIN LAGBHAG MAANLO 6 REQUEST KAR DIYA AHIA AND HAR BAAR UEMIN YE PATA KARNA HOGA KI USER KAUN HAI JISKE LIYE HUM 
+AUTHMIDDLEWARE CALL KARENGE MATLAB BAAR TOKEN BLACKLISTED HAI KI NAHI CHECK HOGA BLACKLISTING MODELS OF MONGOOSE MEIN MATLAB AISE HI HAR REEL,POST 
+KE LIYE LIKE,commnet,SAVE MAANLO TOH YE SAB USER KAREGA THERFORE HAR BAAR TOKEN BLACKLISITING KE BAAR TOKEN BLACKLISTED HAI KI NAHI CHECK HOGA 
+WHICH WILL INCREASE THE PRESSURE ON SERVER 
+
+Issi liye use use the REDIX jo ki humare ram mein save hota hai isliye bahut fast hota hai and data stored in key value paisrs

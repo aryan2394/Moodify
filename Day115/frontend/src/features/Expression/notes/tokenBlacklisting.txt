@@ -1,0 +1,335 @@
+1️⃣ Pehle normal simple samajh lo (without example)
+JWT token kya hota hai
+
+Jab user login karta hai to server usko ek token deta hai.
+
+Login
+↓
+Server token banata hai
+↓
+Client ko token milta hai
+
+Ab jab bhi user koi request karega:
+
+Client → request + token
+Server → token verify
+→ access allow
+
+Server bas ye check karta hai:
+
+1 token valid hai?
+2 token expire hua hai?
+
+Agar valid hai to request allow ho jati hai.
+
+2️⃣ Problem kaha aati hai
+
+JWT ka ek feature hai:
+
+Stateless authentication
+
+Matlab:
+
+Server token ko store nahi karta
+
+Ab problem dekho.
+
+User login karta hai aur token mil gaya.
+
+Token expiry = 1 hour
+
+User 5 minute baad logout kar deta hai.
+
+Lekin:
+
+Token abhi bhi 55 minutes tak valid hai
+
+Agar koi us token ko use kare to server bolega:
+
+token valid hai → access de do
+
+Server ko pata hi nahi hota user logout kar chuka hai.
+
+Yahi main problem hai.
+
+3️⃣ Token blacklisting kya karti hai
+
+Token blacklisting ka idea simple hai.
+
+Server ek list maintain karta hai:
+
+Invalid tokens list
+
+Jab user logout karta hai:
+
+uska token blacklist me add kar diya
+
+Ab jab next request aayegi:
+
+Server check karega:
+
+1 token valid hai?
+2 token blacklist me hai?
+
+Agar blacklist me mil gaya:
+
+Access deny
+4️⃣ Ab Bank ka Example
+
+Socho tum bank app use kar rahe ho.
+
+Step 1 — Login
+
+Tum bank app me login karte ho.
+
+Username + Password
+↓
+Bank server verify karta hai
+↓
+Server ek token deta hai
+
+Ye token matlab:
+
+User authenticated hai
+
+Ab tum paise transfer kar sakte ho.
+
+Step 2 — Request
+
+Jab tum koi kaam karte ho:
+
+Check balance
+Send money
+View transactions
+
+App har request me token bhejta hai.
+
+Request + token
+
+Server check karta hai:
+
+Token valid hai → request allow
+Step 3 — Logout
+
+Ab tum logout kar dete ho.
+
+Logout
+
+Lekin problem ye hai:
+
+Token abhi bhi valid hai
+
+Agar koi hacker tumhara token chura le:
+
+Hacker → token use kare
+
+Server bolega:
+
+Token valid hai
+
+Aur hacker:
+
+Money transfer bhi kar sakta hai
+
+Ye bahut dangerous hai.
+
+5️⃣ Yaha Token Blacklisting ka use hota hai
+
+Logout ke time bank server kya karta hai:
+
+Token ko blacklist me daal deta hai
+
+Example:
+
+blacklist = [
+token123
+]
+
+Ab agar hacker request bheje:
+
+Request + token123
+
+Server check karega:
+
+Token blacklist me hai
+
+Result:
+
+Access denied
+
+Money transfer nahi hoga.
+
+6️⃣ Simple Flow
+Without blacklist
+Login → token
+Logout → token still works
+→ security risk
+With blacklist
+Login → token
+Logout → token blacklist
+Next request → reject
+7️⃣ Ek line me meaning
+
+Token blacklisting ka matlab:
+
+Jo tokens ab valid nahi hone chahiye
+unko ek list me store kar dena
+
+Taaki agar koi unhe use kare to server turant mana kar de.
+
+Agar chaho to main JWT authentication ka pura flow diagram (login → access token → refresh token → blacklist) bhi explain kar sakta hoon jisse concept 100% clear ho jata hai aur tumhe samajh aa jata hai real companies authentication kaise design karti hain.
+
+token toh hai uske paas lekin login toh wo hacker apne laptop se kaega toh password toh chahiye
+
+Tumhara doubt bilkul sahi hai. Chalo step-by-step clear karte hain.
+
+1️⃣ Normal situation (jab hacker ke paas token nahi hai)
+
+Agar hacker login karna chahe to usko chahiye:
+
+email / username
+password
+
+Without password:
+
+login = fail
+
+Yaha tak sab safe hai.
+
+2️⃣ Problem kab hoti hai
+
+Problem tab hoti hai jab token chori ho jata hai.
+
+Login ke baad system aise kaam karta hai:
+
+Login → server token deta hai
+
+Uske baad har request me:
+
+request + token
+
+Server password dobara check nahi karta.
+
+Sirf token check karta hai.
+
+3️⃣ Important point
+
+Login ke baad password use nahi hota.
+
+Sirf token use hota hai.
+
+Example:
+
+login → token mila
+
+Ab:
+
+check balance
+send money
+profile
+
+sab requests me bas:
+
+token
+4️⃣ Hacker kaise use karta hai token
+
+Maan lo hacker ne token chura liya:
+
+Possible ways:
+
+XSS attack
+
+localStorage leak
+
+insecure WiFi
+
+browser extension
+
+network sniffing
+
+Ab hacker ke paas:
+
+valid token
+
+Usko login karne ki zarurat nahi.
+
+Wo direct request bhej sakta hai.
+
+Example:
+
+POST /transfer-money
+Authorization: Bearer token123
+
+Server kya karega?
+
+token valid → request allow
+
+Server ko lagta hai:
+
+ye original user hai
+
+Password ki zarurat hi nahi.
+
+5️⃣ Real life example (ATM card)
+
+Socho:
+
+Bank account = tumhara
+ATM card = token
+
+Agar kisi ko tumhara ATM card mil gaya.
+
+Usko bank login karne ki zarurat nahi.
+
+Wo seedha ATM me jaake:
+
+card insert
+PIN enter
+money withdraw
+
+Card mil gaya matlab access mil gaya.
+
+JWT token bhi same concept hai.
+
+6️⃣ Logout problem
+
+Maan lo:
+
+token expiry = 1 hour
+
+Tum 5 minute me logout kar gaye.
+
+Lekin hacker ke paas token hai.
+
+Wo 55 minute tak use kar sakta hai.
+
+Server bolega:
+
+token valid hai
+
+Isliye token blacklist banayi jati hai.
+
+Logout ke time:
+
+token blacklist
+
+Agar hacker request kare:
+
+token blacklist me hai
+
+Result:
+
+Access denied
+7️⃣ Ek line me samjho
+
+Password sirf login ke time use hota hai.
+
+Login ke baad:
+
+token = identity proof
+
+Agar token chori ho gaya:
+
+hacker password ke bina bhi request kar sakta hai
+
+Isliye token blacklisting + short expiry + refresh tokens use kiye jate hain.
