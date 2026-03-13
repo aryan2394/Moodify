@@ -1,6 +1,7 @@
 const userModel=require("../models/user.model.js");
 const jwt=require("jsonwebtoken")
 const bcrypt=require("bcryptjs")
+const blacklistingModel=require("../models/blacklisting.model.js")
 async function registerController(req,res)
 {
     const {username,email,password}=req.body;
@@ -58,18 +59,22 @@ async function loginController(req,res)
                 username
             }
         ]
-    })
+    }).select("+password")
     if(!userExist)
     {
         return res.status(409).json({
-            "user":"not exist user by shri ji therefore first register"
+            // "user":"not exist user by shri ji therefore first register"
+            // hum kabhi bhi user not found aisa nahi bhjete hai uski jagah hum message bhejte hai invalid credentials WANT TO KNOW THE REASON 
+            // SEE THE NOTES FOLDER 
+            "user":"INVALID CREDENTAILS"
         })
     }
     const passwordCheck=await bcrypt.compare(password,userExist.password);
     if(!passwordCheck)
     {
         return res.status(401).json({
-            "user":"password is wrong by shri ji"
+            // "user":"password is wrong by shri ji"
+            "user":'INVALID CREDENTAILS'
         })
     }
     const token=jwt.sign(
@@ -91,7 +96,30 @@ async function loginController(req,res)
         }
     })
 }
+async function getMeController(req,res)
+{
+    const user=await userModel.findById(req.user.id);
+    res.status(200).json({
+        "user":"user details by shri ji",
+        "shriji":user
+    })
+}
+async function logoutController(req,res)
+{
+    // sabse pahle cookies ko remove kardo browser se phir usko blacklisting mein daal do
+    // pahle toh hum blacklsiting ke liye mongoose ka hi use karenge lekin baad mein hum uske liye redis ka use kar lenege
+    const token=req.cookies.token;
+    const blackListToken=await blacklistingModel.create({
+        token
+    })
+    res.clearCookie("token");
+    res.status(200).json({
+        "user":"user logout successfully by shri ji"
+    })
+}
 module.exports={
     registerController,
-    loginController
+    loginController,
+    getMeController,
+    logoutController
 }

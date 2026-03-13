@@ -1,0 +1,27 @@
+Throughput in Database kya hota hai
+
+Throughput ka matlab hota hai:
+
+1 second me database kitne operations handle kar sakta hai
+
+MongoDB ka average throughput
+
+Operation	Average Throughput
+Reads	50k – 200k ops/sec
+Writes	20k – 100k ops/sec
+
+Matlab agar lagataar 2000 users ek saath aa gaye aur agar wo 20 request per user kar diye then toh 40000 request per second in databse therefore Ab
+mongodb reques handle hi nahi kar skata hai matlab 200 users mein hi mongodb fat gaya therfore GAME KHATAM 
+
+4️⃣ Redis ka average throughput
+
+Operation	Average Throughput
+Reads	100k – 1M ops/sec
+Writes	100k – 800k ops/sec
+
+matlab ye mongodb se 20x jyada operation ek saath handle kar skata kyonki ye data ko ram mein store karta hai and wahi se read karte hai 
+
+Redis itna fast hai (1M ops/sec), toh phir Redis ko primary database kyon nahi banate instead of MongoDB?
+
+REASON:1:ITNA FAST toh hai Lekin bahut costly hai 
+REASON:2:Ismein saari queries hum perform nahi kar skate hai like finding user on the based on email or username 

@@ -1,0 +1,134 @@
+1️⃣ Tumhare code mein kya ho raha hai
+
+Image mein code basically ye kar raha hai:
+
+if (!user) {
+  return res.status(400).json({
+    message: "Invalid credentials"
+  })
+}
+
+Matlab:
+
+Database mein user search kiya
+
+Agar user nahi mila (!user)
+
+To server response bhej raha hai → "Invalid credentials"
+
+2️⃣ Tum soch rahe ho
+
+Tumhara question hai:
+
+Yaha "User not found" kyon nahi bheja?
+
+Kyuki logically to user mila hi nahi.
+
+Bilkul sahi soch hai 👍
+Lekin security ke liye aisa nahi karte.
+
+3️⃣ Hacker ka scene samjho
+
+Maan lo ek hacker hai.
+Usko pata lagana hai ki system mein kaun-kaun se email registered hain.
+
+Wo login API ko baar-baar hit karega.
+
+Case 1 — Agar tum "User not found" bhejo
+
+Hacker request bhejta hai:
+
+email: aryan@gmail.com
+password: 123
+
+Server response:
+
+User not found
+
+Ab hacker ko pata chal gaya:
+
+❌ aryan@gmail.com
+ exist nahi karta
+
+Phir hacker try karega:
+
+email: rahul@gmail.com
+password: 123
+
+Server response:
+
+Password incorrect
+
+Ab hacker ko pata chal gaya:
+
+✅ rahul@gmail.com
+ system mein exist karta hai
+
+Ab wo kya karega?
+
+👉 sirf password guess karega
+
+123456
+password
+rahul123
+
+Isko bolte hain Brute Force Attack
+
+4️⃣ Is problem ko bolte hain
+
+User Enumeration Attack
+
+Matlab hacker system se ye discover kar leta hai:
+
+kaun sa user exist karta hai
+
+kaun sa nahi
+
+5️⃣ Isliye smart developers kya karte hain
+
+Har case mein same message bhejte hain
+
+Chahe problem kuch bhi ho:
+
+1️⃣ user exist nahi karta
+2️⃣ password galat hai
+
+Response hamesha:
+
+Invalid credentials
+6️⃣ Real secure login flow
+const user = await User.findOne({ email })
+
+if (!user) {
+  return res.status(400).json({
+    message: "Invalid credentials"
+  })
+}
+
+const isMatch = await bcrypt.compare(password, user.password)
+
+if (!isMatch) {
+  return res.status(400).json({
+    message: "Invalid credentials"
+  })
+}
+
+User ko hamesha same message milega.
+
+7️⃣ Real life example (Bank)
+
+Socho tum bank login karte ho.
+
+Agar bank bole:
+
+User not found
+
+To hacker ko pata chal jayega ki:
+
+kaun sa username exist karta hai
+
+kaun sa nahi
+
+Isliye bank bhi bolta hai:
+
+Invalid username or password
