@@ -1,0 +1,67 @@
+/* Full page */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;   /* Black background */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Form card */
+.form-container {
+  background: #111;
+  padding: 40px;
+  width: 360px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.08);
+}
+
+/* Heading */
+.form-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: white;
+  letter-spacing: 1px;
+}
+
+/* Form spacing */
+.form-group {
+  margin-bottom: 18px;
+}
+
+/* Labels */
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #bbb;
+}
+
+/* Inputs */
+.form-group input {
+  width: 100%;
+  padding: 11px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: white;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+/* Input focus */
+.form-group input:focus {
+  border-color: #4f8cff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(79,140,255,0.6);
+}
+
+
+/* Placeholder color */
+input::placeholder {
+  color: #777;
+}
+p{
+    margin-top: 10px;
+}

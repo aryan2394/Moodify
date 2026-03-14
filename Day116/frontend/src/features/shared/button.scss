@@ -1,0 +1,17 @@
+/* Button */
+.button {
+  width: 100%;
+  padding: 12px;
+  background: #4f8cff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover effect */
+button:hover {
+  background: #3b6fd8;
+}
