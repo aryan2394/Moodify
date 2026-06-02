@@ -10,10 +10,15 @@ export const useSong = () => {
 
     async function handleGetSong({ mood }) {
         setLoading(true)
-        const data = await getSong({ mood })
-        
-        setSong(data.song)
-        setLoading(false)
+        try {
+            const data = await getSong({ mood })
+            setSong(data.song)
+        } catch (error) {
+            console.error("Failed to get song:", error)
+            setSong(null)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return ({ loading, song, handleGetSong })

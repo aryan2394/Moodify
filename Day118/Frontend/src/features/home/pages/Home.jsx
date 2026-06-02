@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import FaceExpression from '../../Expression/components/FaceExpression'
 import Player from '../components/Player'
 import { useSong } from '../hooks/useSong'
@@ -7,8 +7,10 @@ import { logout } from '../../auth/services/auth.api'
 
 const Home = () => {
 
-    const { handleGetSong } = useSong()
+    const { handleGetSong, loading, song } = useSong()
     const { user, setUser } = useContext(AuthContext)
+    const [ detectedMood, setDetectedMood ] = useState(null)
+    const [ errorMessage, setErrorMessage ] = useState("")
 
     async function handleLogoutClick() {
         try {
@@ -17,6 +19,26 @@ const Home = () => {
         } catch (error) {
             console.error("Logout failed:", error)
         }
+    }
+
+    async function handleDetectClick(expression) {
+        setErrorMessage("")
+        setDetectedMood(expression)
+
+        if (!expression) {
+            setErrorMessage("Face not detected! Please ensure your face is clearly visible to the camera and try again.")
+            return
+        }
+
+        const validMoods = ["happy", "sad", "surprised"]
+        const moodLower = expression.toLowerCase()
+        
+        if (!validMoods.includes(moodLower)) {
+            setErrorMessage(`Neutral expression detected. Try making a clear face: Smile (Happy), Frown (Sad), or Open Mouth (Surprised)!`)
+            return
+        }
+
+        await handleGetSong({ mood: moodLower })
     }
 
     return (
@@ -57,8 +79,72 @@ const Home = () => {
             </div>
 
             <FaceExpression
-                onClick={(expression) => { handleGetSong({ mood: expression }) }}
+                onClick={handleDetectClick}
             />
+
+            {/* Status and Error messages */}
+            <div style={{ marginTop: "20px", width: "100%", maxWidth: "400px", textAlign: "center" }}>
+                {loading && (
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "10px",
+                        color: "#1DB954",
+                        fontWeight: "500",
+                        fontSize: "1.1rem",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        backgroundColor: "rgba(29, 185, 84, 0.1)",
+                        marginBottom: "15px"
+                    }}>
+                        <div className="spinner" style={{
+                            width: "20px",
+                            height: "20px",
+                            border: "3px solid rgba(29, 185, 84, 0.3)",
+                            borderTop: "3px solid #1DB954",
+                            borderRadius: "50%",
+                            animation: "spin 1s linear infinite"
+                        }}></div>
+                        Searching for the perfect song...
+                    </div>
+                )}
+
+                {errorMessage && !loading && (
+                    <div style={{
+                        padding: "12px 16px",
+                        borderRadius: "8px",
+                        backgroundColor: "rgba(231, 76, 60, 0.15)",
+                        border: "1px solid #e74c3c",
+                        color: "#ff6b6b",
+                        fontSize: "0.95rem",
+                        lineHeight: "1.4",
+                        marginBottom: "15px"
+                    }}>
+                        ⚠️ {errorMessage}
+                    </div>
+                )}
+
+                {!loading && !errorMessage && detectedMood && !song && (
+                    <div style={{
+                        padding: "12px 16px",
+                        borderRadius: "8px",
+                        backgroundColor: "rgba(241, 196, 15, 0.15)",
+                        border: "1px solid #f1c40f",
+                        color: "#f39c12",
+                        fontSize: "0.95rem",
+                        lineHeight: "1.4",
+                        marginBottom: "15px"
+                    }}>
+                        🎵 Detected Mood: <strong>{detectedMood}</strong>.
+                        <br />
+                        <span style={{ fontSize: "0.85rem", opacity: 0.9 }}>
+                            No song found in the database for this mood yet. Try uploading one!
+                        </span>
+                    </div>
+                )}
+            </div>
+
             <Player />
         </div>
     )
